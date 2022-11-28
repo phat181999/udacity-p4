@@ -15,13 +15,12 @@ export const handler = middy(
 
     try {
       if (!newTodo.name) {
-        console.log("Can not be blank!");
         return {
           statusCode: 500,
           headers: {
             "Access-Control-Allow-Origin": "*",
           },
-          body: JSON.stringify("Can not be blank!"),
+          body: JSON.stringify({ msg: "Can not be blank!" }),
         };
       }
       const response = await createTodo(newTodo, userId);
