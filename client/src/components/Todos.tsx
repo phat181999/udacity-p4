@@ -64,7 +64,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     try {
       await deleteTodo(this.props.auth.getIdToken(), todoId)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId !== todoId)
+        todos: this.state.todos.filter((todo) => todo.todoId !== todoId)
       })
     } catch {
       alert('Todo deletion failed')
@@ -98,11 +98,11 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       })
     } catch (e) {
       // alert(`Failed to fetch todos: ${e.message}`)
-      let errorMessage = "Failed to fetch todos: ";
+      let errorMessage = 'Failed to fetch todos: '
       if (e instanceof Error) {
-        errorMessage = e.message;
+        errorMessage = e.message
       }
-      alert(errorMessage);
+      alert(errorMessage)
     }
   }
 

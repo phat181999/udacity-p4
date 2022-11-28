@@ -1,51 +1,60 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import 'source-map-support/register'
-import * as middy from 'middy'
-import { cors } from 'middy/middlewares'
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
-import { getUserId } from '../utils';
-import { createTodo } from '../../businessLogic/todos'
-import { createLogger } from '../../utils/logger';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import "source-map-support/register";
+import * as middy from "middy";
+import { cors } from "middy/middlewares";
+import { CreateTodoRequest } from "../../requests/CreateTodoRequest";
+import { getUserId } from "../utils";
+import { createTodo } from "../../businessLogic/todos";
+import { createLogger } from "../../utils/logger";
 
-const logger = createLogger('createTodo')
+const logger = createLogger("createTodo");
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTodo: CreateTodoRequest = JSON.parse(event.body)
-    const userId : string = getUserId(event)
-    
+    const newTodo: CreateTodoRequest = JSON.parse(event.body);
+    const userId: string = getUserId(event);
+
     try {
-      const response = await createTodo(newTodo, userId)
+      if (!newTodo.name) {
+        console.log("Can not be blank!");
+        return {
+          statusCode: 500,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify("Can not be blank!"),
+        };
+      }
+      const response = await createTodo(newTodo, userId);
+
       return {
         statusCode: 201,
         headers: {
-          'Access-Control-Allow-Origin': '*'
+          "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify(
-          {
-            item: response
-          }
-        )
-      }
+        body: JSON.stringify({
+          item: response,
+        }),
+      };
     } catch (err) {
-      logger.error('Unable to complete the create Todo Operation for user', {
+      logger.error("Unable to complete the create Todo Operation for user", {
         userId: userId,
-        error: err
-      })
+        error: err,
+      });
       return {
         statusCode: 500,
         headers: {
-          'Access-Control-Allow-Origin': '*'
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
-          error: err
-        })
-      }
+          error: err,
+        }),
+      };
     }
   }
-)
+);
 
 handler.use(
   cors({
-    credentials: true
+    credentials: true,
   })
-)
+);

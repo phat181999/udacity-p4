@@ -1,4 +1,5 @@
-app: serverless-todo-appft
+org: phat99
+app: serverless-todo-app
 service: serverless-todo-appft
 
 plugins:
