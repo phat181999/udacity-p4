@@ -58,6 +58,21 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:179144709916:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
+    GetTodoID:
+      handler: src/lambda/http/getTodoId.handler
+      tracing: true
+      events:
+        - http:
+            method: get
+            path: todo/{todoId}
+            cors: true
+            authorizer: Auth
+      iamRoleStatements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:Query
+          Resource: arn:aws:dynamodb:${self:provider.region}:179144709916:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
+
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
     tracing: true
